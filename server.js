@@ -16,7 +16,6 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const allowedOrigins = [
-  'https://printer-setup1.vercel.app/',
   'https://printer-setup1.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
