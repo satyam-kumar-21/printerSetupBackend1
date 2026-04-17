@@ -68,7 +68,7 @@ async function getMongoDb() {
 async function getSettings() {
   const db = await getMongoDb();
   const doc = await db.collection(COLLECTION).findOne({ _id: 'global' });
-  return doc || { showHeader: true, showLogo: true, allowModelSearch: true, showInstallationFailed: true };
+  return doc || { showHeader: true, showLogo: true, allowModelSearch: true, showInstallationFailed: true, showCompleteSetup: true };
 }
 
 async function setSettings(settings) {
@@ -88,7 +88,8 @@ router.get('/header-visibility', async (req, res) => {
       showHeader: settings.showHeader,
       showLogo: settings.showLogo,
       allowModelSearch: settings.allowModelSearch,
-      showInstallationFailed: typeof settings.showInstallationFailed === 'boolean' ? settings.showInstallationFailed : true
+      showInstallationFailed: typeof settings.showInstallationFailed === 'boolean' ? settings.showInstallationFailed : true,
+      showCompleteSetup: typeof settings.showCompleteSetup === 'boolean' ? settings.showCompleteSetup : true
     });
   } catch (e) {
     res.status(500).json({ error: 'Failed to load settings.' });
@@ -97,12 +98,13 @@ router.get('/header-visibility', async (req, res) => {
 
 // Set header and logo visibility (protected)
 router.post('/header-visibility', adminAuth, async (req, res) => {
-  const { showHeader, showLogo, allowModelSearch, showInstallationFailed } = req.body;
+  const { showHeader, showLogo, allowModelSearch, showInstallationFailed, showCompleteSetup } = req.body;
   const settings = {
     showHeader: typeof showHeader === 'boolean' ? showHeader : true,
     showLogo: typeof showLogo === 'boolean' ? showLogo : true,
     allowModelSearch: typeof allowModelSearch === 'boolean' ? allowModelSearch : true,
-    showInstallationFailed: typeof showInstallationFailed === 'boolean' ? showInstallationFailed : true
+    showInstallationFailed: typeof showInstallationFailed === 'boolean' ? showInstallationFailed : true,
+    showCompleteSetup: typeof showCompleteSetup === 'boolean' ? showCompleteSetup : true
   };
   try {
     await setSettings(settings);
